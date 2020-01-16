@@ -8,7 +8,7 @@ def save_obj(obj, name):
     @return: Create a pickle file with the content the obj
     '''
     with open(name + '.pkl', 'wb') as f:
-        logging.info('Saving pickle file with name: ' + name + '.pkl')
+        logging.info('Saving pickle file with name: ' + str(name) + '.pkl')
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
@@ -18,5 +18,5 @@ def load_obj(name):
     @return: Load in a dictionary the content from the pickle file
     '''
     with open(name + '.pkl', 'rb') as f:
-        logging.info('Loading pickle file with name: ' + name + '.pkl')
+        logging.info('Loading pickle file with name: ' + str(name) + '.pkl')
         return pickle.load(f)
