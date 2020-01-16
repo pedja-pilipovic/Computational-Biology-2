@@ -70,13 +70,7 @@ class Snp:
 
 
 if __name__ == "__main__":
-    # auxiliar variables to store the path for k-mers files and name for SNPs
-    kmers_0 = None
-    kmers_1 = None
-    snp0_name = None
-    snp1_name = None
-    k = None
-    # define the program description
+     # define the program description
     text = "This tool takes two simple k-mers files (from the kmers.py) and outputs a list of SNPs."
 
     # initiate the parser with a description
