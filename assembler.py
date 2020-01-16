@@ -1,6 +1,7 @@
 '''
 
 '''
+
 # given two sequences and an offset, count the number of matching bases
 def score(sequence1,sequence2,offset):
     return sum([1 for position in range(max(0-offset,0), min([len(sequence2)-offset, len(sequence2), len(sequence1)-offset])) if sequence2[position] == sequence1[position+offset]])

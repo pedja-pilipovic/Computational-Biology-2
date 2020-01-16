@@ -1,12 +1,9 @@
 # include standard modules
-import getopt, sys, data, logging
+import data, logging, assembler, argparse, math
 import numpy as np
 from collections import Counter
-import assembler
 from Bio import pairwise2
 from Bio.pairwise2 import format_alignment
-import argparse
-import math
 
 class Snp():
     def __init__(self, kmers_0, kmers_1):
@@ -55,11 +52,9 @@ class Snp():
     def snp_with_cdf(self, cmean, error_rate=0.01):
         '''
 
-        @param kmers_0: Dictionary of kmers to find SNPs
-        @param kmers_1: Dictionary of kmers to find
-        @param cmean: Mean coverage for the corresponding kmer
-        @param error_rate: Minimum error rate to add the SNP
-        @return: array of SNPs
+        :param cmean: Mean coverage for the corresponding kmer
+        :param error_rate: Minimum error rate to add the SNP
+        :return: array of SNPs
         '''
         kmers_0_snp = []
         for kmer in self.kmers.keys():
@@ -75,7 +70,7 @@ if __name__ == '__main__':
     snp1_name = None
     k = None
     # define the program description
-    text = 'This script will calculate the SNPs from a k-mers files'
+    text = 'This tool takes two simple k-mers files (from the kmers.py) and outputs a list of SNPs.'
 
     # initiate the parser with a description
     parser = argparse.ArgumentParser(description=text)
@@ -86,57 +81,50 @@ if __name__ == '__main__':
     parser.add_argument("-k", help="K value", required=False, default=15)
 
     args = parser.parse_args()
-    try:
-        if args.kmers:
-            logging.debug('Getting the path of k-mer file')
-            kmers_0 = args.kmers
-        if args.kmers2:
-            logging.debug('Getting the path of the second  k-mer file')
-            kmers_1 = args.kmers2
-        if args.snp:
-            logging.debug('Getting the name to save the SNPs')
-            snp0_name = args.snp
-        if args.snp2:
-            logging.debug('Getting the name to save the second SNPs')
-            snp1_name = args.snp2
-        if args.k:
-            logging.debug('Getting the k value')
-            k = args.k
-        if (kmers_1 and snp1_name):
-            logging.debug('Creating the Snp objects')
-            snp_0 = Snp(kmers_0=kmers_0, kmers_1=kmers_1)
-            snp_1 = Snp(kmers_0=kmers_1, kmers_1=kmers_0)
 
-            logging.debug('Get the SNPs from the first k-mers file')
-            kmers_0_snp = snp_0.snp_with_cdf(cmean=snp_0.mean_coverage())
-            logging.info('Save the SNPs from the first k-mers')
-            data.save_obj(kmers_0_snp,snp0_name)
+    logging.debug('Getting the path of k-mer file')
+    kmers_0 = args.kmers
 
-            logging.debug('Get the SNPs from the second k-mers file')
-            kmers_1_snp = snp_1.snp_with_cdf(cmean=snp_1.mean_coverage())
-            logging.info('Save the SNPs from the second k-mers')
-            data.save_obj(kmers_1_snp, snp1_name)
+    logging.debug('Getting the path of the second  k-mer file')
+    kmers_1 = args.kmers2
 
-            logging.info('Printing the list of SNPs')
+    logging.debug('Getting the name to save the SNPs')
+    snp0_name = args.snp
 
-            for i in range(math.floor(len(kmers_0_snp) / k)):
-                print('SNP ' + str(i + 1))
-                # Define two sequences to be aligned
-                X = assembler.ah(kmers_0_snp[round(len(kmers_0_snp) / math.floor(len(kmers_0_snp) / k) * i):round(
-                    len(kmers_0_snp) / math.floor(len(kmers_0_snp) / k) * (i + 1))])
-                Y = assembler.ah(kmers_1_snp[round(len(kmers_1_snp) / math.floor(len(kmers_1_snp) / k) * i):round(
-                    len(kmers_1_snp) / math.floor(len(kmers_1_snp) / k) * (i + 1))])
+    logging.debug('Getting the name to save the second SNPs')
+    snp1_name = args.snp2
 
-                # Get a list of the global alignments between the two sequences ACGGGT and ACG
-                # No parameters. Identical characters have score of 1, else 0.
-                # No gap penalties.
-                alignments = pairwise2.align.globalms(X, Y, 2, 0, -1, 0)
-                # Use format_alignment method to format the alignments in the list
-                print(format_alignment(*alignments[0]))
+    logging.debug('Getting the k value')
+    k = args.k
 
-        else:
-            logging.error('Use -h to see how to use the script')
-            sys.exit(2)
+    if (kmers_1 and kmers_0):
+        logging.debug('Creating the Snp objects')
+        snp_0 = Snp(kmers_0=kmers_0, kmers_1=kmers_1)
+        snp_1 = Snp(kmers_0=kmers_1, kmers_1=kmers_0)
 
-    except:
-        logging.error('Use -h to see how to use the script')
+        logging.debug('Get the SNPs from the first k-mers file')
+        kmers_0_snp = snp_0.snp_with_cdf(cmean=snp_0.mean_coverage())
+        logging.info('Save the SNPs from the first k-mers')
+        data.save_obj(kmers_0_snp,snp0_name)
+
+        logging.debug('Get the SNPs from the second k-mers file')
+        kmers_1_snp = snp_1.snp_with_cdf(cmean=snp_1.mean_coverage())
+        logging.info('Save the SNPs from the second k-mers')
+        data.save_obj(kmers_1_snp, snp1_name)
+
+        logging.info('Printing the list of SNPs')
+
+        for i in range(math.floor(len(kmers_0_snp) / k)):
+            print('SNP ' + str(i + 1))
+            # Define two sequences to be aligned
+            X = assembler.ah(kmers_0_snp[round(len(kmers_0_snp) / math.floor(len(kmers_0_snp) / k) * i):round(
+                len(kmers_0_snp) / math.floor(len(kmers_0_snp) / k) * (i + 1))])
+            Y = assembler.ah(kmers_1_snp[round(len(kmers_1_snp) / math.floor(len(kmers_1_snp) / k) * i):round(
+                len(kmers_1_snp) / math.floor(len(kmers_1_snp) / k) * (i + 1))])
+
+            # Get a list of the global alignments between the two sequences ACGGGT and ACG
+            # No parameters. Identical characters have score of 1, else 0.
+            # No gap penalties.
+            alignments = pairwise2.align.globalms(X, Y, 2, 0, -1, 0)
+            # Use format_alignment method to format the alignments in the list
+            print(format_alignment(*alignments[0]))
