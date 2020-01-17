@@ -14,9 +14,10 @@ class Snp:
         :param kmers_0: Pickle file of k-mers 0
         :param kmers_1: Pickle file of k-mers 1
         """
-        self.kmers = data.load_obj(kmers_0)
-        self.kmers_1 = data.load_obj(kmers_1)
-        self.hist_kmers = dict(Counter(kmers_0.values()))
+        self.kmers = kmers_0
+        self.kmers_1 = kmers_1
+        self.hist_kmers = dict(Counter(self.kmers.values()))
+        print('Initialization')
 
     def mean_coverage(self, start_value=5):
         """
@@ -26,11 +27,13 @@ class Snp:
         """
         C_mean = 0
         n = 0
+        print(self.hist_kmers)
         for v in self.hist_kmers:
             if v > start_value:
                 C_mean += v
                 n += 1
         C_mean /= n
+        return C_mean
 
     def pmf_poisson(self, l, k):
         """
@@ -39,6 +42,8 @@ class Snp:
         :param k: Value
         :return: Poisson probability mass function (PMF)
         """
+        print(l)
+        print(k)
         return l ** k * np.exp(-l) / np.math.factorial(k)
 
     def cdf_poisson(self, l, k):
@@ -48,11 +53,13 @@ class Snp:
         :param k: Value
         :return: Poisson cumulative density function (CDF)
         """
+        print(l)
+        print(k)
         return np.exp(-l) * np.sum(
             [l ** i / np.math.factorial(i) for i in range(0, k + 1)]
         )
 
-    def snp_with_cdf(self, cmean, error_rate=0.01):
+    def snp_with_cdf(self, cmean=50, error_rate=0.01):
         """
 
         :param cmean: Mean coverage for the corresponding kmer
@@ -100,16 +107,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     logging.debug("Getting the path of k-mer file")
-    kmers_0 = args.kmers
+    kmers_0 = data.load_obj(args.kmers_file)
+    print('Loaded kmers_0')
 
     logging.debug("Getting the path of the second  k-mer file")
-    kmers_1 = args.kmers2
-
+    kmers_1 = data.load_obj(args.kmers_file2)
+    print('Loaded kmers_1')
     logging.debug("Getting the name to save the SNPs")
-    snp0_name = args.snp
+    snp0_name = args.snp_name
 
     logging.debug("Getting the name to save the second SNPs")
-    snp1_name = args.snp2
+    snp1_name = args.snp_name2
 
     logging.debug("Getting the k value")
     k = args.k
@@ -117,15 +125,15 @@ if __name__ == "__main__":
     if kmers_1 and kmers_0:
         logging.debug("Creating the Snp objects")
         snp_0 = Snp(kmers_0=kmers_0, kmers_1=kmers_1)
-        snp_1 = Snp(kmers_0=kmers_1, kmers_1=kmers_0)
-
         logging.debug("Get the SNPs from the first k-mers file")
-        kmers_0_snp = snp_0.snp_with_cdf(cmean=snp_0.mean_coverage())
+        kmers_0_snp = snp_0.snp_with_cdf()
         logging.info("Save the SNPs from the first k-mers")
         data.save_obj(kmers_0_snp, snp0_name)
 
+
+        snp_1 = Snp(kmers_0=kmers_1, kmers_1=kmers_0)
         logging.debug("Get the SNPs from the second k-mers file")
-        kmers_1_snp = snp_1.snp_with_cdf(cmean=snp_1.mean_coverage())
+        kmers_1_snp = snp_1.snp_with_cdf()
         logging.info("Save the SNPs from the second k-mers")
         data.save_obj(kmers_1_snp, snp1_name)
 
