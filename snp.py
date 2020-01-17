@@ -27,8 +27,7 @@ class Snp:
         """
         C_mean = 0
         n = 0
-        print(self.hist_kmers)
-        for v in self.hist_kmers:
+        for v in list(self.kmers.values()):
             if v > start_value:
                 C_mean += v
                 n += 1
@@ -59,7 +58,7 @@ class Snp:
             [l ** i / np.math.factorial(i) for i in range(0, k + 1)]
         )
 
-    def snp_with_cdf(self, cmean=50, error_rate=0.01):
+    def snp_with_cdf(self, cmean, error_rate=0.01):
         """
 
         :param cmean: Mean coverage for the corresponding kmer
@@ -126,14 +125,14 @@ if __name__ == "__main__":
         logging.debug("Creating the Snp objects")
         snp_0 = Snp(kmers_0=kmers_0, kmers_1=kmers_1)
         logging.debug("Get the SNPs from the first k-mers file")
-        kmers_0_snp = snp_0.snp_with_cdf()
+        kmers_0_snp = snp_0.snp_with_cdf(snp_0.mean_coverage())
         logging.info("Save the SNPs from the first k-mers")
         data.save_obj(kmers_0_snp, snp0_name)
 
 
         snp_1 = Snp(kmers_0=kmers_1, kmers_1=kmers_0)
         logging.debug("Get the SNPs from the second k-mers file")
-        kmers_1_snp = snp_1.snp_with_cdf()
+        kmers_1_snp = snp_1.snp_with_cdf(snp_1.mean_coverage())
         logging.info("Save the SNPs from the second k-mers")
         data.save_obj(kmers_1_snp, snp1_name)
 
