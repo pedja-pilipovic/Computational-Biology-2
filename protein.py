@@ -3,6 +3,9 @@ from Bio import SeqIO
 import numpy as np
 from collections import Counter
 import argparse
+from sys import platform
+import subprocess
+
 
 class Protein():
     def __init__(self, fasta, tau):
@@ -51,7 +54,7 @@ class Protein():
     def export_cmatrix(self, name, MI_thresh):
 
         dirpath = os.getcwd()
-        f = open(dirpath+ '/' + name+  '.txt', 'w')
+        f = open(dirpath+ '/' + name + '.txt', 'w')
         f.write(str(len(MI_thresh)) + '\n')
         for i in range(len(MI_thresh)):
             for j in range(len(MI_thresh)):
@@ -84,5 +87,18 @@ if __name__ == '__main__':
     MI_matrix = protein.tau(args.threshold, MI_matrix)
     MI_matrix = protein.remove_zeros(MI_matrix)
     print('Exporting the MI Matrix')
-    protein.export_cmatrix(MI_matrix, args.output + '.pkl')
+    protein.export_cmatrix(args.output, MI_matrix)
 
+
+    if (platform == "linux" or platform == "linux2"):
+        # Run the FT-COMAR
+        p = subprocess.Popen(["ls", "-l", "/etc/resolv.conf"], stdout=subprocess.PIPE)
+        output, err = p.communicate()
+        print("*** Running ls -l command ***\n", output)
+
+    elif(platform == "darwin"):
+        # OS X
+        print('Can not show the protein structure with FT-COMAR')
+    elif(platform == "win32"):
+        # Windows...
+        print('Can not show the protein structure with FT-COMAR')
