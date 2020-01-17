@@ -17,7 +17,6 @@ class Snp:
         self.kmers = kmers_0
         self.kmers_1 = kmers_1
         self.hist_kmers = dict(Counter(self.kmers.values()))
-        print('Initialization')
 
     def mean_coverage(self, start_value=5):
         """
@@ -41,8 +40,6 @@ class Snp:
         :param k: Value
         :return: Poisson probability mass function (PMF)
         """
-        print(l)
-        print(k)
         return l ** k * np.exp(-l) / np.math.factorial(k)
 
     def cdf_poisson(self, l, k):
@@ -52,8 +49,6 @@ class Snp:
         :param k: Value
         :return: Poisson cumulative density function (CDF)
         """
-        print(l)
-        print(k)
         return np.exp(-l) * np.sum(
             [l ** i / np.math.factorial(i) for i in range(0, k + 1)]
         )
@@ -87,20 +82,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-kmers2", "--kmers_file2", help="Path of the second k-mers file", required=True
     )
-    parser.add_argument(
-        "-snp",
-        "--snp_name",
-        help="Name of the first SNPs file",
-        required=False,
-        default="snp1",
-    )
-    parser.add_argument(
-        "-snp2",
-        "--snp_name2",
-        help="Name of the second SNPs file",
-        required=False,
-        default="snp2",
-    )
+
     parser.add_argument("-k", help="K value", required=False, default=15)
 
     args = parser.parse_args()
@@ -112,12 +94,7 @@ if __name__ == "__main__":
     logging.debug("Getting the path of the second  k-mer file")
     kmers_1 = data.load_obj(args.kmers_file2)
     print('Loaded kmers_1')
-    logging.debug("Getting the name to save the SNPs")
-    snp0_name = args.snp_name
-
-    logging.debug("Getting the name to save the second SNPs")
-    snp1_name = args.snp_name2
-
+    
     logging.debug("Getting the k value")
     k = args.k
 
@@ -125,16 +102,12 @@ if __name__ == "__main__":
         logging.debug("Creating the Snp objects")
         snp_0 = Snp(kmers_0=kmers_0, kmers_1=kmers_1)
         logging.debug("Get the SNPs from the first k-mers file")
+        print('Extracting the SNPs please wait.')
         kmers_0_snp = snp_0.snp_with_cdf(snp_0.mean_coverage())
-        logging.info("Save the SNPs from the first k-mers")
-        data.save_obj(kmers_0_snp, snp0_name)
-
 
         snp_1 = Snp(kmers_0=kmers_1, kmers_1=kmers_0)
         logging.debug("Get the SNPs from the second k-mers file")
         kmers_1_snp = snp_1.snp_with_cdf(snp_1.mean_coverage())
-        logging.info("Save the SNPs from the second k-mers")
-        data.save_obj(kmers_1_snp, snp1_name)
 
         logging.info("Printing the list of SNPs")
 
