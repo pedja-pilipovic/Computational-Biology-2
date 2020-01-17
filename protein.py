@@ -88,17 +88,3 @@ if __name__ == '__main__':
     MI_matrix = protein.remove_zeros(MI_matrix)
     print('Exporting the MI Matrix')
     protein.export_cmatrix(args.output, MI_matrix)
-
-
-    if (platform == "linux" or platform == "linux2"):
-        # Run the FT-COMAR
-        p = subprocess.Popen(["ls", "-l", "/etc/resolv.conf"], stdout=subprocess.PIPE)
-        output, err = p.communicate()
-        print("*** Running ls -l command ***\n", output)
-
-    elif(platform == "darwin"):
-        # OS X
-        print('Can not show the protein structure with FT-COMAR')
-    elif(platform == "win32"):
-        # Windows...
-        print('Can not show the protein structure with FT-COMAR')
