@@ -5,14 +5,16 @@ from collections import Counter
 import argparse
 
 class Protein():
-    def __init__(self, fasta):
+    def __init__(self, fasta, tau):
         dirpath = os.getcwd()
-        sequences = list(SeqIO.parse(dirpath +'/'+ fasta, "fasta"))
+        self.sequences = list(SeqIO.parse(dirpath +'/'+ fasta, "fasta"))
+        self.tau = tau
+
         MSA = []
-        for seq in sequences:
+        for seq in self.sequences:
             MSA.append(list(str(seq.seq)))
-        (N, M) = np.shape(MSA)
-        MSA = np.array(MSA)
+        self.MSA = np.array(MSA)
+
 
     def MI(self, sequences, i, j):
         N = np.shape(sequences)[0]
@@ -22,12 +24,29 @@ class Protein():
 
         return sum(Pij[(x, y)] / N * np.log(Pij[(x, y)] * N / (Pi[x] * Pj[y])) for x, y in Pij)
 
-    def m_prime(self, MI_matrix):
+    def calculate_m_prime(self, MI_matrix):
         c_mean = np.mean(MI_matrix, 0)  # columns mean
         r_mean = np.mean(MI_matrix, 1)  # rows mean
         MI_mean = [[np.mean([c, r]) for c in c_mean] for r in r_mean]  # matrix of mean
         MI_prime = np.subtract(MI_matrix, MI_mean)
         return MI_prime
+
+    def tau(self, tau, MI_prime):
+        MI_thresh = np.array(MI_prime)
+        for i in range(len(MI_prime)):
+            for j in range(len(MI_prime[i])):
+                MI_thresh[i][j] = int(MI_prime[i][j] > tau)
+        return MI_thresh
+
+    def remove_zeros(self, MI_thresh):
+        index = []
+        for i in range(len(MI_thresh)):
+            if np.sum(MI_thresh[i]) == 0:
+                index.append(i)
+
+        MI_thresh = np.delete(MI_thresh, index, axis=1)
+        MI_thresh = np.delete(MI_thresh, index, axis=0)
+        return MI_thresh
 
     def export_cmatrix(self, name, MI_thresh):
 
@@ -54,5 +73,8 @@ if __name__ == '__main__':
         required=False,
         default="cmatrix",
     )
-    parser.add_argument("-t", "--threshold", help="Threshold", required=False, default=0.)
+    parser.add_argument("-t", "--threshold", help="Threshold", required=False, default=0.01)
     args = parser.parse_args()
+
+    protein = Protein(args.fasta, args.threshold)
+    MI_matrix = [[protein.MI(protein.sequences, i, j) for i in range(protein.MSA)] for j in range(protein.MSA)]
