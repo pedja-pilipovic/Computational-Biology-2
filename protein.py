@@ -77,4 +77,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     protein = Protein(args.fasta, args.threshold)
+    print('Computing the MI Matrix, patiente this process would take time')
     MI_matrix = [[protein.MI(protein.sequences, i, j) for i in range(protein.MSA)] for j in range(protein.MSA)]
+    print('Reducing the MI Matrix')
+    MI_matrix = protein.calculate_m_prime(MI_matrix)
+    MI_matrix = protein.tau(args.threshold, MI_matrix)
+    MI_matrix = protein.remove_zeros(MI_matrix)
+    print('Exporting the MI Matrix')
+    protein.export_cmatrix(MI_matrix, args.output + '.pkl')
+
