@@ -71,7 +71,7 @@ class Snp:
 
 
 if __name__ == "__main__":
-     # define the program description
+    # define the program description
     text = "This tool takes two simple k-mers files (from the kmers.py) and outputs a list of SNPs."
 
     # initiate the parser with a description
@@ -89,12 +89,12 @@ if __name__ == "__main__":
 
     logging.debug("Getting the path of k-mer file")
     kmers_0 = data.load_obj(args.kmers_file)
-    print('Loaded kmers_0')
+    print("Loaded kmers_0")
 
     logging.debug("Getting the path of the second  k-mer file")
     kmers_1 = data.load_obj(args.kmers_file2)
-    print('Loaded kmers_1')
-    
+    print("Loaded kmers_1")
+
     logging.debug("Getting the k value")
     k = args.k
 
@@ -102,7 +102,7 @@ if __name__ == "__main__":
         logging.debug("Creating the Snp objects")
         snp_0 = Snp(kmers_0=kmers_0, kmers_1=kmers_1)
         logging.debug("Get the SNPs from the first k-mers file")
-        print('Extracting the SNPs please wait.')
+        print("Extracting the SNPs please wait.")
         kmers_0_snp = snp_0.snp_with_cdf(snp_0.mean_coverage())
 
         snp_1 = Snp(kmers_0=kmers_1, kmers_1=kmers_0)
