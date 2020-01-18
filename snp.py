@@ -96,7 +96,7 @@ if __name__ == "__main__":
     print("Loaded kmers_1")
 
     logging.debug("Getting the k value")
-    k = args.k
+    k = int(args.k)
 
     if kmers_1 and kmers_0:
         logging.debug("Creating the Snp objects")
