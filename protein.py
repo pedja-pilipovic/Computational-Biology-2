@@ -16,6 +16,7 @@ class Protein():
         MSA = []
         for seq in self.sequences:
             MSA.append(list(str(seq.seq)))
+        self.N, self.M = np.shape(MSA)
         self.MSA = np.array(MSA)
 
 
@@ -81,7 +82,7 @@ if __name__ == '__main__':
 
     protein = Protein(args.fasta, args.threshold)
     print('Computing the MI Matrix, patiente this process would take time')
-    MI_matrix = [[protein.MI(protein.sequences, i, j) for i in range(protein.MSA)] for j in range(protein.MSA)]
+    MI_matrix = [[protein.MI(protein.sequences, i, j) for i in range(protein.M)] for j in range(protein.N)]
     print('Reducing the MI Matrix')
     MI_matrix = protein.calculate_m_prime(MI_matrix)
     MI_matrix = protein.tau(args.threshold, MI_matrix)
