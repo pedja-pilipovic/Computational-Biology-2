@@ -1,6 +1,17 @@
+"""
+Tool that contains the utils to export and import Pickle files
+"""
+
 import pickle
 import logging
 import os
+
+__author__ = "BATIER Lucas, GONZALEZ JIMENEZ Alvaro, POLOPOVIC Predja"
+__copyright__ = "Copyright 2020, The Salmonela Project"
+__license__ = "GPL"
+__version__ = "1.0.1"
+__email__ = "lucas.batier@hotmail.fr, alvaro.gonzalez-jimenez@grenoble-inp.org, predrag.pilipovic@grenoble-inp.org"
+__status__ = "Production"
 
 
 def save_obj(obj, name):

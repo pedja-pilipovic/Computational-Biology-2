@@ -1,10 +1,22 @@
-from Bio import SeqIO
+"""
+Tool that takes a FASTA file and computes the k-mers algorithm.
+Export the resulting dictionary into a Pickle file for posterior analysis.
+"""
+
 import argparse, os, logging, data
+from Bio import SeqIO
+
+__author__ = "BATIER Lucas, GONZALEZ JIMENEZ Alvaro, POLOPOVIC Predja"
+__copyright__ = "Copyright 2020, The Salmonela Project"
+__license__ = "GPL"
+__version__ = "1.0.1"
+__email__ = "lucas.batier@hotmail.fr, alvaro.gonzalez-jimenez@grenoble-inp.org, predrag.pilipovic@grenoble-inp.org"
+__status__ = "Production"
 
 
 class Kmers:
     def __init__(self, reads, k=15):
-        logging.debug('Initialize the k-mers with k=' + str(k))
+        logging.debug("Initialize the k-mers with k=" + str(k))
         dirpath = os.getcwd()
         self.k = k
         self.reads = list(SeqIO.parse(dirpath + "/" + reads, "fasta"))
@@ -18,14 +30,14 @@ class Kmers:
       that this sequence is repeated k-mer
       """
         kmers = {}
-        logging.debug('K-mer counting')
+        logging.debug("K-mer counting")
         for N, read in enumerate(self.reads):
-            logging.debug('Subsequences in the read' + str(read.seq))
+            logging.debug("Subsequences in the read" + str(read.seq))
             read_str = str(read.seq)
             for start in range(len(read_str) - self.k):
                 kmer = read_str[start : start + self.k]
                 kmers[kmer] = kmers.get(kmer, 0) + 1
-        logging.debug('Returning the dictinoary of k-mers')
+        logging.debug("Returning the dictinoary of k-mers")
         return kmers
 
 
@@ -52,5 +64,5 @@ if __name__ == "__main__":
     dictionary_kmers = kmer.k_mer_counting()
     print("Storing the dictionary of k-mers")
 
-    logging.debug('Storing the dictionary of k-mers')
+    logging.debug("Storing the dictionary of k-mers")
     data.save_obj(dictionary_kmers, args.output + ".pkl")
