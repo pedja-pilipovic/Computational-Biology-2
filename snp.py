@@ -1,9 +1,20 @@
-# include standard modules
+"""
+Tool that takes two Pickles which contains the dictionary of k-mers
+and output a list of SNPs.
+"""
+
 import data, logging, assembler, argparse, math
 import numpy as np
 from collections import Counter
 from Bio import pairwise2
 from Bio.pairwise2 import format_alignment
+
+__author__ = "BATIER Lucas, GONZALEZ JIMENEZ Alvaro, POLOPOVIC Predja"
+__copyright__ = "Copyright 2020, The Salmonela Project"
+__license__ = "GPL"
+__version__ = "1.0.1"
+__email__ = "lucas.batier@hotmail.fr, alvaro.gonzalez-jimenez@grenoble-inp.org, predrag.pilipovic@grenoble-inp.org"
+__status__ = "Production"
 
 
 class Snp:
@@ -96,7 +107,7 @@ if __name__ == "__main__":
     print("Loaded kmers_1")
 
     logging.debug("Getting the k value")
-    k = args.k
+    k = int(args.k)
 
     if kmers_1 and kmers_0:
         logging.debug("Creating the Snp objects")
