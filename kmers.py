@@ -48,7 +48,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     print("Initializing")
-    kmer = Kmers(args.fasta, args.k)
+    kmer = Kmers(args.fasta, int(args.k))
     dictionary_kmers = kmer.k_mer_counting()
     print("Storing the dictionary of k-mers")
 
