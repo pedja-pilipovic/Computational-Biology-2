@@ -1,10 +1,7 @@
-import os
+import os, argparse
 from Bio import SeqIO
 import numpy as np
 from collections import Counter
-import argparse
-from sys import platform
-import subprocess
 
 
 class Protein():
@@ -21,6 +18,13 @@ class Protein():
 
 
     def MI(self, sequences, i, j):
+        '''
+
+        :param sequences: Sequences of the FASTA file
+        :param i: Index in the row i
+        :param j: Index in the column j
+        :return:
+        '''
         N = np.shape(sequences)[0]
         Pi = Counter(s[i] for s in sequences)
         Pj = Counter(s[j] for s in sequences)
@@ -29,6 +33,11 @@ class Protein():
         return sum(Pij[(x, y)] / N * np.log(Pij[(x, y)] * N / (Pi[x] * Pj[y])) for x, y in Pij)
 
     def calculate_m_prime(self, MI_matrix):
+        '''
+
+        :param MI_matrix: Matrix after MI method
+        :return:
+        '''
         c_mean = np.mean(MI_matrix, 0)  # columns mean
         r_mean = np.mean(MI_matrix, 1)  # rows mean
         MI_mean = [[np.mean([c, r]) for c in c_mean] for r in r_mean]  # matrix of mean
@@ -36,6 +45,12 @@ class Protein():
         return MI_prime
 
     def tau(self, tau, MI_prime):
+        '''
+
+        :param tau: Threshold to use
+        :param MI_prime: Output of matrix after m_prime method
+        :return:
+        '''
         MI_thresh = np.array(MI_prime)
         for i in range(len(MI_prime)):
             for j in range(len(MI_prime[i])):
@@ -43,6 +58,11 @@ class Protein():
         return MI_thresh
 
     def remove_zeros(self, MI_thresh):
+        '''
+
+        :param MI_thresh: Matrix afer the tau method
+        :return: Reduced matrix without zeros
+        '''
         index = []
         for i in range(len(MI_thresh)):
             if np.sum(MI_thresh[i]) == 0:
@@ -53,7 +73,12 @@ class Protein():
         return MI_thresh
 
     def export_cmatrix(self, name, MI_thresh):
+        '''
 
+        :param name: Name of the file we want to save the contact matrix
+        :param MI_thresh: Matrix after removing_zeros method or tau method
+        :return:
+        '''
         dirpath = os.getcwd()
         f = open(dirpath+ '/' + name + '.txt', 'w')
         f.write(str(len(MI_thresh)) + '\n')
@@ -85,7 +110,7 @@ if __name__ == '__main__':
     MI_matrix = [[protein.MI(protein.sequences, i, j) for i in range(protein.M)] for j in range(protein.N)]
     print('Reducing the MI Matrix')
     MI_matrix = protein.calculate_m_prime(MI_matrix)
-    MI_matrix = protein.tau(args.threshold, MI_matrix)
+    MI_matrix = protein.tau(int(args.threshold), MI_matrix)
     MI_matrix = protein.remove_zeros(MI_matrix)
     print('Exporting the MI Matrix')
     protein.export_cmatrix(args.output, MI_matrix)
