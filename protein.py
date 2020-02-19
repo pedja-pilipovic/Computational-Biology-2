@@ -7,7 +7,7 @@ import numpy as np
 from Bio import SeqIO
 from collections import Counter
 
-__author__ = "BATIER Lucas, GONZALEZ JIMENEZ Alvaro, POLOPOVIC Predja"
+__author__ = "BATIER Lucas, GONZALEZ JIMENEZ Alvaro, PILIPVOC Predrag"
 __copyright__ = "Copyright 2020, The Salmonela Project"
 __license__ = "GPL"
 __version__ = "1.0.1"

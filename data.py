@@ -6,7 +6,7 @@ import pickle
 import logging
 import os
 
-__author__ = "BATIER Lucas, GONZALEZ JIMENEZ Alvaro, POLOPOVIC Predja"
+__author__ = "BATIER Lucas, GONZALEZ JIMENEZ Alvaro, PILIPOVIC Predrag"
 __copyright__ = "Copyright 2020, The Salmonela Project"
 __license__ = "GPL"
 __version__ = "1.0.1"

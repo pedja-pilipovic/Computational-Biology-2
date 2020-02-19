@@ -6,7 +6,7 @@ Export the resulting dictionary into a Pickle file for posterior analysis.
 import argparse, os, logging, data
 from Bio import SeqIO
 
-__author__ = "BATIER Lucas, GONZALEZ JIMENEZ Alvaro, POLOPOVIC Predja"
+__author__ = "BATIER Lucas, GONZALEZ JIMENEZ Alvaro, PILIPVOC Predrag"
 __copyright__ = "Copyright 2020, The Salmonela Project"
 __license__ = "GPL"
 __version__ = "1.0.1"
