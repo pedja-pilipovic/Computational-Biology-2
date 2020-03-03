@@ -1,4 +1,4 @@
-# Computational-Biology-2
+# Computational Biology 2
 
 Second part of the course [Computational Biology](https://clovisg.github.io/teaching/protein-structure-prediction/session1.html) at Master of Science in Industrial and Applied Mathematics. 
 
