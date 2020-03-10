@@ -5,7 +5,7 @@ Second part of the course [Computational Biology](https://clovisg.github.io/teac
 Requirements: 
 
 * Work Package (WP) 1:
-  * T1 - one tool that takes two simple FASTA sequencing files (reads) and outputs a list of SNPs (different from SNP),
+  * T1 - one tool that takes two simple FASTA sequencing files (reads) and outputs a list of SNPs,
 
   * T2 - one tool that takes a multiple sequence alignment in standard FASTA file format and outputs a protein structure.
 
